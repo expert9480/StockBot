@@ -181,3 +181,6 @@ cython_debug/
 .cursorindexingignore
 pseudocode.txt
 trade_log.txt
+bitcoinOnly/state.json
+bitcoinDayTrade/state.json
+bitcoinOnly/trade_log.txt
