@@ -180,3 +180,4 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 pseudocode.txt
+trade_log.txt

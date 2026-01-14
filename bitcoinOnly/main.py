@@ -17,7 +17,7 @@ load_dotenv()
 # ---------------- CONFIG ----------------
 STARTING_MONEY_USD = 100000.00  # <--- change this
 
-SYMBOL = "BTCUSD"  # Alpaca crypto pair commonly used in examples :contentReference[oaicite:4]{index=4}
+SYMBOL = "BTC/USD"  # Alpaca crypto pair commonly used in examples :contentReference[oaicite:4]{index=4}
 LOG_FILE = "trade_log.txt"
 
 PRICE_CHECK_SECONDS = 60
@@ -26,7 +26,7 @@ REPORT_EVERY_SECONDS = 12 * 60 * 60  # 12 hours
 # If you want to avoid “churn” from tiny differences:
 MIN_TRADE_USD = 5.00
 
-TRADE_COOLDOWN_SECONDS = 10 * 60  # 10 minutes cooldown to avoid spam buys
+TRADE_COOLDOWN_SECONDS = 1 * 60  # 10 minutes cooldown to avoid spam buys
 
 
 # ---------------- ALPACA SETUP ----------------
@@ -45,7 +45,7 @@ def now_utc() -> dt.datetime:
 def log_line(line: str) -> None:
     stamp = now_utc().strftime("%Y-%m-%d %H:%M:%S UTC")
     out = f"[{stamp}] {line}"
-    print(out)
+    # print(out)
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(out + "\n")
 
@@ -185,7 +185,7 @@ def strategy_step(price: float, last_trade_time: dt.datetime | None) -> bool:
 
     # 3) GREEN: maintain ~20% allocation
     if price < green:
-        target_btc_value = STARTING_MONEY_USD * 0.20
+        target_btc_value = STARTING_MONEY_USD * 0.50
         needed = max(0.0, target_btc_value - btc_value)
         buy_usd = min(needed, cash)
 

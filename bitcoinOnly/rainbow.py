@@ -21,6 +21,7 @@ from dataclasses import dataclass
 # --- Base regression constants (tune if you want a different rainbow model) ---
 A = 3.109106
 B = -8.164198
+BASELINE_SCALE = 0.38
 GENESIS = dt.datetime(2009, 1, 9, tzinfo=dt.timezone.utc)
 
 # --- Band multipliers (tune these!) ---
@@ -54,10 +55,16 @@ def _weeks_since_genesis(t: dt.datetime) -> float:
     return max(weeks, 1e-6)
 
 
+#def baseline_price(t: dt.datetime) -> float:
+#    weeks = _weeks_since_genesis(t)
+#    # price = 10^(A*ln(weeks) + B)
+#    return 10 ** (A * math.log(weeks) + B)
+
 def baseline_price(t: dt.datetime) -> float:
     weeks = _weeks_since_genesis(t)
-    # price = 10^(A*ln(weeks) + B)
-    return 10 ** (A * math.log(weeks) + B)
+    # IMPORTANT: use e^(...) not 10^(...)
+    return math.exp(A * math.log(weeks) + B)
+
 
 
 def get_levels(
@@ -70,7 +77,8 @@ def get_levels(
     if t is None:
         t = dt.datetime.now(dt.timezone.utc)
 
-    base = baseline_price(t)
+    #base = baseline_price(t)
+    base = baseline_price(t) * BASELINE_SCALE
     return RainbowLevels(
         baseline=base,
         blue_level=base * blue_multiplier,
