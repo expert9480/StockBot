@@ -10,6 +10,7 @@ from alpaca_trade_api import TimeFrame
 
 from rainbow import get_levels
 from gmail import sendReport
+from state import load_state, save_state, get_dt, set_dt
 
 load_dotenv()
 
@@ -24,6 +25,9 @@ REPORT_EVERY_SECONDS = 12 * 60 * 60  # 12 hours
 
 # If you want to avoid “churn” from tiny differences:
 MIN_TRADE_USD = 5.00
+
+TRADE_COOLDOWN_SECONDS = 10 * 60  # 10 minutes cooldown to avoid spam buys
+
 
 # ---------------- ALPACA SETUP ----------------
 API_KEY = os.getenv("alpacaKey")
@@ -124,7 +128,7 @@ def build_report(last_report_time: dt.datetime) -> str:
 
 
 # ---------------- STRATEGY ----------------
-def strategy_step(price: float) -> None:
+def strategy_step(price: float, last_trade_time: dt.datetime | None) -> bool:
     levels = get_levels(now_utc())
 
     blue = levels.blue_level
@@ -135,6 +139,14 @@ def strategy_step(price: float) -> None:
     cash = safe_get_cash()
 
     btc_value = btc_qty * price
+
+        # Cooldown check
+    if last_trade_time is not None:
+        since = (now_utc() - last_trade_time).total_seconds()
+        if since < TRADE_COOLDOWN_SECONDS:
+            log_line(f"COOLDOWN: {int(since)}s since last trade (<{TRADE_COOLDOWN_SECONDS}s), HOLD")
+            return False
+
 
     log_line(
         f"PRICE={price:.2f} | BTC_QTY={btc_qty:.8f} BTC_VALUE=${btc_value:.2f} CASH=${cash:.2f} "
@@ -154,7 +166,7 @@ def strategy_step(price: float) -> None:
         log_line(f"ACTION: SELL ALL (price {price:.2f} > yellow {yellow:.2f})")
         submit_market_sell_qty(SYMBOL, btc_qty)
         log_line(f"ORDER: sell qty={btc_qty:.8f}")
-        return
+        return True
 
     # 2) BLUE: go all-in up to STARTING_MONEY_USD
     if price < blue:
@@ -166,6 +178,7 @@ def strategy_step(price: float) -> None:
             log_line(f"ACTION: BUY ALL-IN (price {price:.2f} < blue {blue:.2f}), notional=${buy_usd:.2f}")
             submit_market_buy_notional(SYMBOL, buy_usd)
             log_line(f"ORDER: buy notional=${buy_usd:.2f}")
+            return True
         else:
             log_line("ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.")
         return
@@ -180,12 +193,14 @@ def strategy_step(price: float) -> None:
             log_line(f"ACTION: BUY to 20% (price {price:.2f} < green {green:.2f}), notional=${buy_usd:.2f}")
             submit_market_buy_notional(SYMBOL, buy_usd)
             log_line(f"ORDER: buy notional=${buy_usd:.2f}")
+            return True
         else:
             log_line("ACTION: (green) No buy; already at/above 20% target or insufficient cash/min trade.")
         return
 
     # Otherwise: no action
     log_line("ACTION: HOLD (no thresholds triggered)")
+    return False
 
 
 # ---------------- MAIN LOOP ----------------
@@ -193,29 +208,81 @@ def main() -> None:
     log_line("=== BOT START ===")
     log_line(f"STARTING_MONEY_USD=${STARTING_MONEY_USD:.2f} | SYMBOL={SYMBOL}")
 
-    last_report_time = now_utc()
+    # Load saved state
+    state = load_state()
+
+    last_report_time = get_dt(state, "last_report_time") or now_utc()
+    last_trade_time = get_dt(state, "last_trade_time")  # can be None
+    last_bar_time = get_dt(state, "last_bar_time")      # can be None
+
+    # Schedule next report relative to last_report_time
     next_report_ts = time.time() + REPORT_EVERY_SECONDS
+    if last_report_time:
+        # If we restarted, try to keep the 12-hour rhythm:
+        elapsed = (now_utc() - last_report_time).total_seconds()
+        remaining = REPORT_EVERY_SECONDS - elapsed
+        next_report_ts = time.time() + max(30, remaining)  # minimum 30s
 
     while True:
         try:
-            price = get_latest_btc_price()
-            strategy_step(price)
+            # ---- Get latest bar and ensure it's "new" ----
+            end = now_utc()
+            start = end - dt.timedelta(minutes=3)
+
+            bars = alpaca.get_crypto_bars(
+                SYMBOL,
+                TimeFrame.Minute,
+                start.isoformat(),
+                end.isoformat(),
+            ).df
+
+            if bars is None or bars.empty:
+                raise RuntimeError("No crypto bars returned")
+
+            bar_time = bars.index[-1].to_pydatetime()
+            if bar_time.tzinfo is None:
+                bar_time = bar_time.replace(tzinfo=dt.timezone.utc)
+
+            price = float(bars["close"].iloc[-1])
+
+            # If we already processed this exact minute bar, skip
+            if last_bar_time is not None and bar_time <= last_bar_time:
+                log_line(f"SKIP: already processed bar @ {bar_time.isoformat()}")
+            else:
+                # Update bar time in state immediately
+                last_bar_time = bar_time
+                set_dt(state, "last_bar_time", last_bar_time)
+                save_state(state)
+
+                # ---- Run strategy with cooldown ----
+                did_trade = strategy_step(price, last_trade_time)
+
+                if did_trade:
+                    last_trade_time = now_utc()
+                    set_dt(state, "last_trade_time", last_trade_time)
+                    save_state(state)
+
         except Exception as e:
             log_line(f"ERROR: {repr(e)}")
 
-        # Send report every 12 hours
+        # ---- Email report every 12 hours ----
         if time.time() >= next_report_ts:
             try:
                 body = build_report(last_report_time)
                 sendReport(body=body)
                 log_line("EMAIL: sent 12-hour report")
+
+                last_report_time = now_utc()
+                set_dt(state, "last_report_time", last_report_time)
+                save_state(state)
+
             except Exception as e:
                 log_line(f"EMAIL ERROR: {repr(e)}")
 
-            last_report_time = now_utc()
             next_report_ts = time.time() + REPORT_EVERY_SECONDS
 
         time.sleep(PRICE_CHECK_SECONDS)
+
 
 
 if __name__ == "__main__":
