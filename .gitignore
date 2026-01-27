@@ -184,3 +184,7 @@ trade_log.txt
 bitcoinOnly/state.json
 bitcoinDayTrade/state.json
 bitcoinOnly/trade_log.txt
+oilFutures(dead)/trades.csv
+indexes/index_vix_state.pkl
+bitcoinDayTrade2/notes.txt
+bitcoinDayTrade2/bitcoin_daytrade_v2_state.pkl
