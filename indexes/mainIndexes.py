@@ -678,6 +678,14 @@ def main() -> None:
 
             time.sleep(CHECK_SECONDS)
 
+    except Exception as e:
+        log_event("ERROR", "Fatal error in main", {"err": repr(e)})
+        try:
+            save_state(state)
+            log_event("STATE", "saved after fatal error")
+        except Exception as save_err:
+            log_event("ERROR", "failed saving after fatal error", {"err": repr(save_err)})
+
 
 if __name__ == "__main__":
     main()
