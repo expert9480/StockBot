@@ -36,16 +36,16 @@ BITI_SYMBOL = "BITI"
 
 # Strategy parameters
 UPTREND_WINDOW = 3             # last 3 one-minute closes
-MIN_MOVE_PCT = 0.00015          # 0.05% over 3 minutes to be considered "strong"
+MIN_MOVE_PCT = 0.00055          # 0.04% over 3 minutes to be considered "strong"
 COOLDOWN_SECONDS = 60 * 2      # 2 minutes cooldown after any trade
 
 # Risk / sizing
 STARTING_MONEY_USD = 100_000.00
-MAX_TRADE_USD = STARTING_MONEY_USD * 1.00    # cap per action (raise if you want)
+MAX_TRADE_USD = STARTING_MONEY_USD * 1.00
 MIN_TRADE_USD = 1.00
 
 # BITI handling
-SELL_BITI_BEFORE_CLOSE_MIN = 5  # minutes before close: force BITI exit
+SELL_BITI_BEFORE_CLOSE_MIN = 5  # minutes before close: force BITI exit + disable BITI buys
 
 # If no holdings and signal is FLAT:
 DEFAULT_WHEN_FLAT_MARKET_OPEN = "CASH"   # "BTC" or "CASH"
@@ -118,7 +118,16 @@ def default_state() -> Dict[str, Any]:
             "price_window": [],              # last 3 BTC 1m closes
             "last_signal": "INIT",           # UP/DOWN/FLAT
             "last_move_pct": 0.0,
-        }
+        },
+        "exit": {
+            "active": False,
+            "asset": None,                 # "BTC" / "BITI" etc
+            "exit_price": None,
+            "lowest_since_exit": None,
+            "post_exit_window": [],        # recent prices since exit
+            "exit_time": None
+}
+
     }
 
 def save_state(state: Dict[str, Any]) -> None:
@@ -152,7 +161,6 @@ def minutes_to_close() -> Optional[float]:
         if not c.is_open:
             return None
         close_dt = c.next_close
-        # next_close is usually timezone-aware; ensure aware arithmetic
         now = now_utc()
         delta = close_dt - now
         return delta.total_seconds() / 60.0
@@ -186,6 +194,24 @@ def iso_to_dt(x: Optional[str]) -> Optional[dt.datetime]:
 
 def dt_to_iso(x: Optional[dt.datetime]) -> Optional[str]:
     return x.isoformat() if x else None
+
+
+# ---------------- BITI MARKET-CLOSE RULES ----------------
+def biti_allowed_now() -> bool:
+    """
+    BITI is allowed only when:
+      - market is open
+      - AND we are NOT inside the forced-close window
+    """
+    if not market_is_open():
+        return False
+    m = minutes_to_close()
+    if m is None:
+        return True
+    return m > SELL_BITI_BEFORE_CLOSE_MIN
+
+def can_trade_biti_now() -> bool:
+    return biti_allowed_now()
 
 
 # ---------------- DATA FETCHING ----------------
@@ -332,37 +358,42 @@ def compute_buy_usd() -> float:
     usable = min(spendable_usd(), STARTING_MONEY_USD, MAX_TRADE_USD)
     return usable
 
-def can_trade_biti_now() -> bool:
-    return market_is_open()
-
-def force_exit_biti_if_close_soon() -> bool:
+def force_exit_biti_if_close_soon() -> Tuple[bool, bool]:
     """
-    If BITI is held and market is closing soon, sell BITI.
+    Returns (sold_biti, in_close_window).
+
+    in_close_window means: market is open AND minutes_to_close <= SELL_BITI_BEFORE_CLOSE_MIN
+    When in_close_window is True, the main loop should NOT buy BITI and should skip
+    signal trading for this iteration to avoid re-buying after a forced sell.
     """
     if not market_is_open():
-        return False
+        return (False, False)
+
     m = minutes_to_close()
     if m is None:
-        return False
-    if m <= SELL_BITI_BEFORE_CLOSE_MIN and biti_qty() > 0:
+        return (False, False)
+
+    in_close_window = (m <= SELL_BITI_BEFORE_CLOSE_MIN)
+
+    if in_close_window and biti_qty() > 0:
         qty = biti_qty()
         oid = place_equity_sell_qty(BITI_SYMBOL, qty)
         log_line(f"FORCE: SELL BITI before close (T-{m:.1f}m) qty={qty:.6f} order_id={oid}")
-        return True
-    return False
+        return (True, True)
+
+    return (False, in_close_window)
 
 def rotate_to_btc(price: float) -> bool:
     """
     Ensure we hold BTC and NOT BITI.
     """
-    # avoid duplicates
     if has_open_order_for({BTC_TRADE_SYMBOL, BITI_SYMBOL, "BTCUSD"}):
         log_line("SKIP: open order exists (BTC/BITI) -> no rotate_to_btc")
         return False
 
     did = False
 
-    # sell BITI first (if allowed)
+    # sell BITI first ONLY if allowed
     if can_trade_biti_now():
         q_biti = biti_qty()
         if q_biti > 0:
@@ -390,13 +421,12 @@ def rotate_to_btc(price: float) -> bool:
 
 def rotate_to_biti() -> bool:
     """
-    Ensure we hold BITI and NOT BTC (market hours only).
+    Ensure we hold BITI and NOT BTC (market hours only, and not in close-window).
     """
     if not can_trade_biti_now():
-        log_line("INFO: market closed -> BITI disabled, skipping rotate_to_biti")
+        log_line("INFO: BITI disabled (market closed or close-window) -> skipping rotate_to_biti")
         return False
 
-    # avoid duplicates
     if has_open_order_for({BTC_TRADE_SYMBOL, BITI_SYMBOL, "BTCUSD"}):
         log_line("SKIP: open order exists (BTC/BITI) -> no rotate_to_biti")
         return False
@@ -444,6 +474,7 @@ def rotate_to_cash() -> bool:
         log_line(f"ACTION: SELL BTC ALL -> qty={q_btc:.8f} order_id={oid}")
         did = True
 
+    # sell BITI only if allowed
     if can_trade_biti_now():
         q_biti = biti_qty()
         if q_biti > 0:
@@ -511,6 +542,7 @@ def main() -> None:
     log_line(f"Config: CHECK={CHECK_SECONDS}s SAVE={SAVE_EVERY_SECONDS}s REPORT_OPEN={REPORT_EVERY_SECONDS_OPEN}s")
     log_line(f"Symbols: BTC_TRADE={BTC_TRADE_SYMBOL} BTC_POS={BTC_POS_SYMBOLS} BITI={BITI_SYMBOL}")
     log_line(f"Sizing: STARTING=${STARTING_MONEY_USD:.2f} MAX_TRADE=${MAX_TRADE_USD:.2f}")
+    log_line(f"BITI close rule: SELL_BITI_BEFORE_CLOSE_MIN={SELL_BITI_BEFORE_CLOSE_MIN} (BITI disabled during close-window)")
 
     # startup email
     if ENABLE_REPORTS and ENABLE_STARTUP_REPORT:
@@ -527,11 +559,39 @@ def main() -> None:
 
     while True:
         try:
-            # Force BITI exit before close
+            # --- MARKET CLOSE WINDOW LOGIC (GLOBAL GUARD) ---
+            sold_biti, in_close_window = (False, False)
             try:
-                force_exit_biti_if_close_soon()
+                sold_biti, in_close_window = force_exit_biti_if_close_soon()
             except Exception as e:
                 log_line(f"ERROR: force_exit_biti_if_close_soon -> {repr(e)}")
+
+            # If we're in the close window, NEVER trade BITI and also skip signal trading
+            # for this minute to prevent any re-buy after a forced sell.
+            if in_close_window:
+                log_line("INFO: In market-close window -> BITI disabled. Skipping signal trading this minute.")
+
+                # Reporting still allowed (market open), saving still allowed
+                if should_send_report_open(state):
+                    try:
+                        btc_time, btc_price = get_latest_btc_close_1m()
+                        body = make_report(state, btc_price, None)  # BITI price not meaningful in close-window
+                        sendReport(body=body, subject_prefix="BTC DayTrade v2 Report (Close Window)")
+                        log_line("EMAIL: close-window report sent")
+                        update_last_report_prices(state, btc_price, None)
+                    except Exception as e:
+                        log_line(f"EMAIL ERROR (report close-window): {repr(e)}")
+
+                if (now_utc() - last_save_time).total_seconds() >= SAVE_EVERY_SECONDS:
+                    try:
+                        save_state(state)
+                        last_save_time = now_utc()
+                        log_line("STATE: saved")
+                    except Exception as e:
+                        log_line(f"ERROR: save_state -> {repr(e)}")
+
+                time.sleep(CHECK_SECONDS)
+                continue
 
             # If any open order exists, don't place new ones
             if has_open_order_for({BTC_TRADE_SYMBOL, "BTCUSD", BITI_SYMBOL}):
@@ -551,6 +611,7 @@ def main() -> None:
                     ts = time.time()
                     state["trees"]["BTC"].insert(ts, btc_price)
 
+                    # Only track BITI price when market open
                     biti_price = get_biti_last_price() if market_is_open() else None
                     if biti_price is not None:
                         state["trees"]["BITI"].insert(ts, biti_price)
@@ -566,7 +627,8 @@ def main() -> None:
                     log_line(
                         f"BTC 1m close={btc_price:.2f} bar={bar_time.isoformat()} | "
                         f"signal={sig.direction} move={sig.move_pct*100:.3f}% | "
-                        f"market_open={market_is_open()} | BTC_QTY={btc_qty():.8f} | BITI_QTY={biti_qty():.6f} | "
+                        f"market_open={market_is_open()} | BITI_allowed={biti_allowed_now()} | "
+                        f"BTC_QTY={btc_qty():.8f} | BITI_QTY={biti_qty():.6f} | "
                         f"CASH=${cash:.2f} | BP=${bp:.2f} | spendable=${spendable_usd():.2f}"
                     )
 
@@ -580,7 +642,6 @@ def main() -> None:
                     if since_trade < COOLDOWN_SECONDS:
                         log_line(f"COOLDOWN: {int(since_trade)}s < {COOLDOWN_SECONDS}s -> HOLD")
                     else:
-                        # require minimal move strength
                         strong = sig.move_pct >= MIN_MOVE_PCT
 
                         if sig.direction == "UP" and strong:
@@ -589,12 +650,13 @@ def main() -> None:
                                 state["meta"]["last_trade_time"] = dt_to_iso(now_utc())
 
                         elif sig.direction == "DOWN" and strong:
-                            if market_is_open():
+                            if can_trade_biti_now():
                                 did = rotate_to_biti()
                                 if did:
                                     state["meta"]["last_trade_time"] = dt_to_iso(now_utc())
                             else:
-                                # market closed: BTC-only trading -> go to CASH on DOWN
+                                # BITI not allowed (close-window) OR market closed: rotate to CASH
+                                log_line("INFO: bearish but BITI not allowed -> rotating to CASH")
                                 did = rotate_to_cash()
                                 if did:
                                     state["meta"]["last_trade_time"] = dt_to_iso(now_utc())
@@ -648,7 +710,6 @@ def main() -> None:
                 log_line(f"ERROR: save on exit -> {repr(e)}")
             break
         except Exception as e:
-            # never die silently
             log_line(f"ERROR: main loop -> {repr(e)}")
 
         time.sleep(CHECK_SECONDS)

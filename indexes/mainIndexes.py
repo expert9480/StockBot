@@ -29,20 +29,26 @@ ENABLE_STARTUP_REPORT = True
 # Timing
 CHECK_SECONDS = 60  # 1 check per minute
 SAVE_EVERY_SECONDS = 15 * 60
-REPORT_EVERY_SECONDS_OPEN = 4 * 60 * 60  # every 4 hours while market open (changeable)
+REPORT_EVERY_SECONDS_OPEN = 4 * 60 * 60  # every 4 hours while market open
 
 # Strategy thresholds
+# Risk-off: sell when VIX spikes
 VIX_SELL_LEVEL = 28.0
-VIX_REBUY_LEVEL = 40.0
 
-# "3 checks increasing" requirement
-UPTREND_WINDOW = 3  # 3 checks
+# Normal regime: allowed to buy / (re)invest when VIX is calm
+VIX_BUY_LEVEL = 20.0
 
+# Optional confirmation before buying (3 consecutive upticks for EACH ETF)
+UPTREND_WINDOW = 3
+REQUIRE_UPTICK_FOR_BUY = False  # set True if you want the 3-check confirmation
+
+# Buy safety
 STARTING_MONEY_USD = 100_000.00
-MAX_TRADE_USD_PER_SYMBOL = 50_000.00  # safety cap per ETF buy; set higher if desired
+MAX_TRADE_USD_PER_SYMBOL = 50_000.00
+MIN_BUY_USD = 50.0                 # ignore tiny buys
+BUY_COOLDOWN_SECONDS = 30 * 60     # don't buy more than once per 30 minutes
 
-# Watched ETFs (edit as needed)
-# Using SPY + VOO + VT as "S&P 500 + S&P 500 + Total World"
+# Watched ETFs
 WATCH_ETFS = ["SPY", "VOO", "VT"]
 VIX_SYMBOL = "^VIX"
 
@@ -57,11 +63,30 @@ def now_utc() -> dt.datetime:
     return dt.datetime.now(dt.timezone.utc)
 
 
-def log_line(msg: str) -> None:
+def _fmt_kv(ctx: Optional[Dict[str, Any]]) -> str:
+    if not ctx:
+        return ""
+    parts: List[str] = []
+    for k, v in ctx.items():
+        try:
+            if isinstance(v, float):
+                parts.append(f"{k}={v:.6f}")
+            else:
+                parts.append(f"{k}={v}")
+        except Exception:
+            parts.append(f"{k}={repr(v)}")
+    return " | " + " ".join(parts)
+
+
+def log_event(level: str, msg: str, ctx: Optional[Dict[str, Any]] = None) -> None:
     ts = now_utc().strftime("%Y-%m-%d %H:%M:%S UTC")
-    line = f"[{ts}] {msg}"
+    line = f"[{ts}] {level:<5} {msg}{_fmt_kv(ctx)}"
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(line + "\n")
+
+
+def log_line(msg: str) -> None:
+    log_event("INFO", msg)
 
 
 # ----------------- BST FOR INTRADAY PRICES -----------------
@@ -90,24 +115,10 @@ class PriceBST:
             elif k > node.key:
                 node.right = _ins(node.right, k, v)
             else:
-                # same timestamp: overwrite
                 node.value = v
             return node
 
         self.root = _ins(self.root, key, value)
-
-    def inorder(self) -> List[Tuple[float, float]]:
-        out: List[Tuple[float, float]] = []
-
-        def _walk(node: Optional[BSTNode]) -> None:
-            if node is None:
-                return
-            _walk(node.left)
-            out.append((node.key, node.value))
-            _walk(node.right)
-
-        _walk(self.root)
-        return out
 
     def last_value(self) -> Optional[float]:
         node = self.root
@@ -124,21 +135,22 @@ def default_state() -> Dict[str, Any]:
         "day": now_utc().date().isoformat(),
         "trees": {sym: PriceBST() for sym in (WATCH_ETFS + [VIX_SYMBOL])},
         "meta": {
-            "mode": "INVESTED",  # INVESTED or SOLD_OUT
-            "sell_snapshot": {},  # {sym: sell_price}
-            "sell_time": None,    # iso timestamp
+            "mode": "INVESTED",        # INVESTED or SOLD_OUT (risk-off)
+            "sell_snapshot": {},       # {sym: sell_price}
+            "sell_time": None,         # iso timestamp
             "last_report_prices": {},  # {sym: price_at_last_report}
             "day_open_prices": {},     # {sym: open_price_for_day}
             "last_report_time": None,  # iso timestamp
             "last_save_time": None,    # iso timestamp
             "last_check_time": None,   # iso timestamp
-            "uptick_buffer": {sym: [] for sym in WATCH_ETFS},  # last N prices per sym
+            "uptick_buffer": {sym: [] for sym in WATCH_ETFS},
+            "loop_count": 0,
+            "last_buy_time": None,     # iso timestamp
         },
     }
 
 
 def save_state(state: Dict[str, Any]) -> None:
-    # Pickle whole object (BST included)
     tmp = STATE_FILE + ".tmp"
     with open(tmp, "wb") as f:
         pickle.dump(state, f, protocol=pickle.HIGHEST_PROTOCOL)
@@ -148,30 +160,29 @@ def save_state(state: Dict[str, Any]) -> None:
 
 def load_state() -> Dict[str, Any]:
     if not os.path.exists(STATE_FILE):
+        log_event("INFO", "STATE: no existing state file -> using default_state()")
         return default_state()
 
     try:
         with open(STATE_FILE, "rb") as f:
             s = pickle.load(f)
 
-        # Day rollover -> reset trees/open prices but keep meta modes if you want.
         today = now_utc().date().isoformat()
         if s.get("day") != today:
+            log_event("INFO", "STATE: day mismatch -> resetting state", {"loaded_day": s.get("day"), "today": today})
             s = default_state()
         return s
     except Exception as e:
-        log_line(f"ERROR: failed to load state -> {repr(e)}; starting fresh.")
+        log_event("ERROR", "STATE: failed to load -> starting fresh", {"err": repr(e)})
         return default_state()
 
 
-# ----------------- MARKET DATA -----------------
+# ----------------- MARKET DATA (YFINANCE) -----------------
 def yf_last_price(symbol: str) -> float:
-    """
-    Uses yfinance fast path; falls back safely.
-    """
+    t0 = time.time()
     t = yf.Ticker(symbol)
-    # fast_info is usually present; if not, fallback to history
-    price = None
+
+    price: Optional[float] = None
     try:
         price = t.fast_info.get("last_price", None)
     except Exception:
@@ -183,22 +194,25 @@ def yf_last_price(symbol: str) -> float:
             raise RuntimeError(f"No yfinance data for {symbol}")
         price = float(hist["Close"].iloc[-1])
 
+    dt_ms = (time.time() - t0) * 1000.0
+    log_event("DATA", "yfinance last price", {"symbol": symbol, "price": float(price), "ms": dt_ms})
     return float(price)
 
 
 def yf_day_open_price(symbol: str) -> float:
-    """
-    Gets today's open from 1d data.
-    """
+    t0 = time.time()
     t = yf.Ticker(symbol)
+
     hist = t.history(period="1d", interval="1d")
     if hist is None or hist.empty:
-        # fallback
         hist = t.history(period="5d", interval="1d")
         if hist is None or hist.empty:
             raise RuntimeError(f"No open price data for {symbol}")
-        # use most recent row
-    return float(hist["Open"].iloc[-1])
+
+    op = float(hist["Open"].iloc[-1])
+    dt_ms = (time.time() - t0) * 1000.0
+    log_event("DATA", "yfinance open price", {"symbol": symbol, "open": op, "ms": dt_ms})
+    return op
 
 
 # ----------------- ALPACA -----------------
@@ -224,7 +238,7 @@ def spendable_usd() -> float:
     """
     cash, bp = account_cash_and_bp()
     usable = bp if bp <= cash else cash
-    return max(0.0, usable - 5.00)  # small buffer
+    return max(0.0, usable - 5.00)
 
 
 def safe_position_qty(symbol: str) -> float:
@@ -239,53 +253,59 @@ def list_open_orders_for(symbols: set[str]) -> List[Any]:
     try:
         orders = alpaca.list_orders(status="open", limit=200)
         return [o for o in orders if getattr(o, "symbol", "") in symbols]
-    except Exception:
+    except Exception as e:
+        log_event("WARN", "ALPACA: list_orders failed", {"err": repr(e)})
         return []
 
 
 def submit_sell_all(symbol: str) -> bool:
     qty = safe_position_qty(symbol)
     if qty <= 0:
+        log_event("THINK", "SELL skipped (no position)", {"symbol": symbol, "qty": qty})
         return False
-    o = alpaca.submit_order(
-        symbol=symbol,
-        qty=str(qty),
-        side="sell",
-        type="market",
-        time_in_force="day",
-    )
-    log_line(f"ACTION: SELL {symbol} ALL qty={qty:.6f} order_id={getattr(o,'id','')}")
-    return True
+    try:
+        o = alpaca.submit_order(
+            symbol=symbol,
+            qty=str(qty),
+            side="sell",
+            type="market",
+            time_in_force="day",
+        )
+        log_event("ACTION", "SELL all", {"symbol": symbol, "qty": qty, "order_id": getattr(o, "id", "")})
+        return True
+    except Exception as e:
+        log_event("ERROR", "SELL failed", {"symbol": symbol, "qty": qty, "err": repr(e)})
+        return False
 
 
 def submit_buy_notional(symbol: str, usd: float) -> bool:
     if usd <= 0:
+        log_event("THINK", "BUY skipped (usd<=0)", {"symbol": symbol, "usd": usd})
         return False
-    o = alpaca.submit_order(
-        symbol=symbol,
-        notional=round(usd, 2),
-        side="buy",
-        type="market",
-        time_in_force="day",
-    )
-    log_line(f"ACTION: BUY {symbol} notional=${usd:.2f} order_id={getattr(o,'id','')}")
-    return True
+    try:
+        o = alpaca.submit_order(
+            symbol=symbol,
+            notional=round(usd, 2),
+            side="buy",
+            type="market",
+            time_in_force="day",
+        )
+        log_event("ACTION", "BUY notional", {"symbol": symbol, "usd": float(usd), "order_id": getattr(o, "id", "")})
+        return True
+    except Exception as e:
+        log_event("ERROR", "BUY failed", {"symbol": symbol, "usd": float(usd), "err": repr(e)})
+        return False
 
 
 # ----------------- STRATEGY HELPERS -----------------
 def update_uptick_buffer(state: Dict[str, Any], sym: str, price: float) -> None:
     buf: List[float] = state["meta"]["uptick_buffer"].setdefault(sym, [])
     buf.append(price)
-    # keep last UPTREND_WINDOW prices
     while len(buf) > UPTREND_WINDOW:
         buf.pop(0)
 
 
 def is_upticking_3(state: Dict[str, Any]) -> bool:
-    """
-    True if EACH ETF has 3 consecutive increasing checks (p0<p1<p2).
-    If you want "any ETF" instead, change logic.
-    """
     for sym in WATCH_ETFS:
         buf: List[float] = state["meta"]["uptick_buffer"].get(sym, [])
         if len(buf) < UPTREND_WINDOW:
@@ -295,19 +315,42 @@ def is_upticking_3(state: Dict[str, Any]) -> bool:
     return True
 
 
-def all_etfs_below_sell_snapshot(state: Dict[str, Any], current_prices: Dict[str, float]) -> bool:
-    snap: Dict[str, float] = state["meta"].get("sell_snapshot", {})
-    if not snap:
-        return False
+def uptick_debug(state: Dict[str, Any]) -> Dict[str, Any]:
+    out: Dict[str, Any] = {}
     for sym in WATCH_ETFS:
-        if sym not in snap:
-            return False
-        if current_prices[sym] >= snap[sym]:
-            return False
-    return True
+        buf = state["meta"]["uptick_buffer"].get(sym, [])
+        seq_ok = False
+        if len(buf) >= 3:
+            seq_ok = bool(buf[0] < buf[1] < buf[2])
+        out[sym] = {"buf": [round(x, 4) for x in buf], "3_up": seq_ok}
+    return out
 
 
-def compute_per_symbol_buy_usd(state: Dict[str, Any]) -> Dict[str, float]:
+def positions_qty(symbols: List[str]) -> Dict[str, float]:
+    return {s: safe_position_qty(s) for s in symbols}
+
+
+def is_flat(symbols: List[str]) -> bool:
+    q = positions_qty(symbols)
+    return all(qty <= 0 for qty in q.values())
+
+
+def buy_cooldown_ok(state: Dict[str, Any]) -> bool:
+    last_iso = state["meta"].get("last_buy_time")
+    if not last_iso:
+        return True
+    try:
+        last = dt.datetime.fromisoformat(last_iso)
+    except Exception:
+        return True
+    return (now_utc() - last).total_seconds() >= BUY_COOLDOWN_SECONDS
+
+
+def mark_buy_time(state: Dict[str, Any]) -> None:
+    state["meta"]["last_buy_time"] = now_utc().isoformat()
+
+
+def compute_per_symbol_buy_usd() -> Dict[str, float]:
     """
     Allocate spendable evenly across ETFs, capped per symbol and by STARTING_MONEY_USD.
     """
@@ -322,9 +365,6 @@ def compute_per_symbol_buy_usd(state: Dict[str, Any]) -> Dict[str, float]:
 
 # ----------------- REPORTING -----------------
 def format_report(state: Dict[str, Any], prices: Dict[str, float]) -> str:
-    """
-    Includes: open, last-report, current, % changes
-    """
     opens = state["meta"].get("day_open_prices", {})
     last_rep = state["meta"].get("last_report_prices", {})
 
@@ -364,26 +404,30 @@ def format_report(state: Dict[str, Any], prices: Dict[str, float]) -> str:
 def maybe_send_report(state: Dict[str, Any], prices: Dict[str, float]) -> None:
     if not ENABLE_REPORTS:
         return
-    if not market_is_open():
+
+    try:
+        is_open = market_is_open()
+    except Exception as e:
+        log_event("WARN", "ALPACA: get_clock failed (report check)", {"err": repr(e)})
+        return
+
+    if not is_open:
         return
 
     now = now_utc()
     last_iso = state["meta"].get("last_report_time")
     last = dt.datetime.fromisoformat(last_iso) if last_iso else None
 
-    if last is not None:
-        if (now - last).total_seconds() < REPORT_EVERY_SECONDS_OPEN:
-            return
+    if last is not None and (now - last).total_seconds() < REPORT_EVERY_SECONDS_OPEN:
+        return
 
-    # build + send
     body = format_report(state, prices)
     try:
         sendReport(body=body, subject_prefix="Index/VIX Report")
-        log_line("EMAIL: report sent")
+        log_event("EMAIL", "report sent")
     except Exception as e:
-        log_line(f"EMAIL ERROR: {repr(e)}")
+        log_event("ERROR", "EMAIL report failed", {"err": repr(e)})
 
-    # update last report prices + time
     for sym, p in prices.items():
         state["meta"]["last_report_prices"][sym] = p
     state["meta"]["last_report_time"] = now.isoformat()
@@ -391,6 +435,7 @@ def maybe_send_report(state: Dict[str, Any], prices: Dict[str, float]) -> None:
 
 # ----------------- MAIN LOOP -----------------
 def main() -> None:
+    log_event("INFO", "BOT starting", {"watch_etfs": ",".join(WATCH_ETFS), "vix": VIX_SYMBOL})
     state = load_state()
 
     # Ensure trees exist
@@ -399,11 +444,12 @@ def main() -> None:
 
     # Startup: record opens once per day
     if not state["meta"].get("day_open_prices"):
+        log_event("INFO", "INIT: fetching day open prices")
         try:
             for sym in (WATCH_ETFS + [VIX_SYMBOL]):
                 state["meta"]["day_open_prices"][sym] = yf_day_open_price(sym)
         except Exception as e:
-            log_line(f"ERROR: failed to fetch open prices -> {repr(e)}")
+            log_event("ERROR", "INIT: failed to fetch open prices", {"err": repr(e)})
 
     # Startup report
     if ENABLE_REPORTS and ENABLE_STARTUP_REPORT:
@@ -411,11 +457,11 @@ def main() -> None:
             prices = {sym: yf_last_price(sym) for sym in (WATCH_ETFS + [VIX_SYMBOL])}
             body = "Bot initialized and running.\n\n" + format_report(state, prices)
             sendReport(body=body, subject_prefix="Startup")
-            log_line("EMAIL: startup report sent")
+            log_event("EMAIL", "startup report sent")
         except Exception as e:
-            log_line(f"EMAIL ERROR (startup): {repr(e)}")
+            log_event("ERROR", "EMAIL startup failed", {"err": repr(e)})
 
-    last_save = None
+    last_save: Optional[dt.datetime] = None
     if state["meta"].get("last_save_time"):
         try:
             last_save = dt.datetime.fromisoformat(state["meta"]["last_save_time"])
@@ -423,95 +469,167 @@ def main() -> None:
             last_save = None
 
     while True:
+        loop_t0 = time.time()
         try:
-            # no console output; all logging goes to file only
+            state["meta"]["loop_count"] = int(state["meta"].get("loop_count", 0)) + 1
+            state["meta"]["last_check_time"] = now_utc().isoformat()
 
             # day rollover safeguard
             today = now_utc().date().isoformat()
             if state.get("day") != today:
-                log_line("INFO: day rollover -> resetting state")
+                log_event("INFO", "DAY rollover -> resetting state", {"prev_day": state.get("day"), "today": today})
                 state = default_state()
 
-            # Fetch prices (yfinance)
+            # Fetch prices
             prices: Dict[str, float] = {}
+            data_errors: Dict[str, str] = {}
             for sym in (WATCH_ETFS + [VIX_SYMBOL]):
-                prices[sym] = yf_last_price(sym)
+                try:
+                    prices[sym] = yf_last_price(sym)
+                except Exception as e:
+                    data_errors[sym] = repr(e)
+
+            if data_errors:
+                log_event("WARN", "DATA: pricing incomplete -> skipping trading", {"errors": data_errors})
+                maybe_send_report(state, prices)
+                now = now_utc()
+                if last_save is None or (now - last_save).total_seconds() >= SAVE_EVERY_SECONDS:
+                    save_state(state)
+                    last_save = now
+                    log_event("STATE", "saved (after data error)")
+                time.sleep(CHECK_SECONDS)
+                continue
 
             # Insert into BSTs
             ts = time.time()
             for sym, p in prices.items():
                 state["trees"][sym].insert(ts, p)
 
-            # Update uptick buffers for ETFs
+            # Update uptick buffers
             for sym in WATCH_ETFS:
                 update_uptick_buffer(state, sym, prices[sym])
 
-            # Update open prices if missing
+            # Backfill open prices if missing
             for sym in (WATCH_ETFS + [VIX_SYMBOL]):
                 if sym not in state["meta"]["day_open_prices"]:
                     try:
                         state["meta"]["day_open_prices"][sym] = yf_day_open_price(sym)
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        log_event("WARN", "DATA: failed to backfill open price", {"symbol": sym, "err": repr(e)})
 
-            # Avoid trading if open orders exist
+            # Market status
+            try:
+                is_open = market_is_open()
+            except Exception as e:
+                log_event("ERROR", "ALPACA: get_clock failed -> skipping trading", {"err": repr(e)})
+                is_open = False
+
+            mode = state["meta"].get("mode", "INVESTED")
+            vix = float(prices[VIX_SYMBOL])
+            flat = is_flat(WATCH_ETFS)
+
+            log_event(
+                "THINK",
+                "Loop snapshot",
+                {
+                    "loop": state["meta"]["loop_count"],
+                    "mode": mode,
+                    "market_open": is_open,
+                    "vix": vix,
+                    "buy_lvl": VIX_BUY_LEVEL,
+                    "sell_lvl": VIX_SELL_LEVEL,
+                    "flat": flat,
+                },
+            )
+
+            # Open orders gate (blocks BOTH buys and sells)
             open_orders = list_open_orders_for(set(WATCH_ETFS))
             if open_orders:
-                log_line(f"SKIP: {len(open_orders)} open order(s) exist; waiting.")
+                summary = []
+                for o in open_orders[:10]:
+                    summary.append(
+                        {
+                            "sym": getattr(o, "symbol", ""),
+                            "side": getattr(o, "side", ""),
+                            "type": getattr(o, "type", ""),
+                            "qty": getattr(o, "qty", ""),
+                            "notional": getattr(o, "notional", ""),
+                            "status": getattr(o, "status", ""),
+                            "id": getattr(o, "id", ""),
+                        }
+                    )
+                log_event("THINK", "SKIP trading (open orders exist)", {"count": len(open_orders), "orders": summary})
             else:
-                vix = prices[VIX_SYMBOL]
-                mode = state["meta"].get("mode", "INVESTED")
-
-                # SELL RULE
+                # --- SELL RULE (risk-off) ---
                 if mode == "INVESTED" and vix >= VIX_SELL_LEVEL:
-                    if market_is_open():
-                        log_line(f"TRIGGER: VIX={vix:.2f} >= {VIX_SELL_LEVEL:.2f} -> SELL ALL")
+                    log_event("THINK", "Evaluate SELL", {"vix": vix, "threshold": VIX_SELL_LEVEL, "market_open": is_open})
+                    if is_open:
+                        log_event("TRIG", "SELL: VIX spike -> SELL ALL", {"vix": vix})
                         any_sold = False
                         for sym in WATCH_ETFS:
                             any_sold = submit_sell_all(sym) or any_sold
 
-                        # record snapshot even if you already had 0 shares
                         state["meta"]["sell_snapshot"] = {sym: prices[sym] for sym in WATCH_ETFS}
                         state["meta"]["sell_time"] = now_utc().isoformat()
                         state["meta"]["mode"] = "SOLD_OUT"
 
-                        if not any_sold:
-                            log_line("INFO: sell trigger hit but no positions were held (still switching to SOLD_OUT).")
+                        log_event("INFO", "SELL complete -> SOLD_OUT", {"any_sold": any_sold})
                     else:
-                        log_line(f"INFO: VIX sell trigger hit (VIX={vix:.2f}) but market closed; no action.")
+                        log_event("THINK", "SELL blocked (market closed)", {"vix": vix})
 
-                # REBUY RULE
-                elif mode == "SOLD_OUT":
-                    # Only consider rebuy when market open
-                    if market_is_open():
-                        snap_ok = all_etfs_below_sell_snapshot(state, prices)
-                        if vix >= VIX_REBUY_LEVEL and snap_ok:
-                            uptick = is_upticking_3(state)
-                            if uptick:
-                                log_line(
-                                    f"TRIGGER: VIX={vix:.2f} >= {VIX_REBUY_LEVEL:.2f} "
-                                    f"+ all ETFs below sell snapshot + 3-check uptick -> REBUY"
+                # --- BUY RULE (normal regime) ---
+                else:
+                    # buys are allowed when VIX is calm
+                    if not is_open:
+                        log_event("THINK", "No trading (market closed)")
+                    elif vix > VIX_BUY_LEVEL:
+                        log_event("THINK", "No buying (VIX above calm threshold)", {"vix": vix, "buy_lvl": VIX_BUY_LEVEL})
+                    elif not buy_cooldown_ok(state):
+                        log_event("THINK", "No buying (cooldown)", {"cooldown_sec": BUY_COOLDOWN_SECONDS})
+                    else:
+                        # Only (re)invest if either:
+                        # - we are SOLD_OUT (risk-off), OR
+                        # - we are INVESTED but actually flat (no positions)
+                        should_invest = (mode == "SOLD_OUT") or (mode == "INVESTED" and flat)
+
+                        if not should_invest:
+                            log_event("THINK", "No action (already invested with positions)")
+                        else:
+                            uptick_ok = is_upticking_3(state)
+                            if REQUIRE_UPTICK_FOR_BUY and not uptick_ok:
+                                log_event("THINK", "WAIT: calm regime but uptick not confirmed", {"uptick": uptick_debug(state)})
+                            else:
+                                alloc = compute_per_symbol_buy_usd()
+                                cash, bp = account_cash_and_bp()
+                                log_event(
+                                    "TRIG",
+                                    "BUY: (re)investing in calm regime",
+                                    {
+                                        "mode": mode,
+                                        "flat": flat,
+                                        "vix": vix,
+                                        "cash": cash,
+                                        "buying_power": bp,
+                                        "spendable": round(spendable_usd(), 2),
+                                        "alloc": {k: round(v, 2) for k, v in alloc.items()},
+                                        "require_uptick": REQUIRE_UPTICK_FOR_BUY,
+                                        "uptick_ok": uptick_ok,
+                                    },
                                 )
-                                alloc = compute_per_symbol_buy_usd(state)
-                                for sym in WATCH_ETFS:
-                                    usd = alloc[sym]
-                                    if usd >= 1.0:
-                                        submit_buy_notional(sym, usd)
 
+                                placed_any = False
+                                for sym in WATCH_ETFS:
+                                    usd = float(alloc.get(sym, 0.0))
+                                    if usd >= MIN_BUY_USD:
+                                        placed_any = submit_buy_notional(sym, usd) or placed_any
+                                    else:
+                                        log_event("THINK", "BUY skipped (too small)", {"symbol": sym, "usd": usd, "min": MIN_BUY_USD})
+
+                                mark_buy_time(state)
                                 state["meta"]["mode"] = "INVESTED"
-                                # reset sell snapshot after rebuy
                                 state["meta"]["sell_snapshot"] = {}
                                 state["meta"]["sell_time"] = None
-                            else:
-                                log_line(
-                                    f"WAIT: rebuy conditions met except uptick. "
-                                    f"VIX={vix:.2f} snap_ok={snap_ok} uptick={uptick}"
-                                )
-                        else:
-                            log_line(
-                                f"WAIT: SOLD_OUT. VIX={vix:.2f} (need >= {VIX_REBUY_LEVEL:.2f}) "
-                                f"snap_ok={snap_ok}"
-                            )
+                                log_event("INFO", "BUY step complete -> INVESTED", {"placed_any": placed_any})
 
             # Reporting
             maybe_send_report(state, prices)
@@ -521,19 +639,21 @@ def main() -> None:
             if last_save is None or (now - last_save).total_seconds() >= SAVE_EVERY_SECONDS:
                 save_state(state)
                 last_save = now
-                log_line("STATE: saved")
+                log_event("STATE", "saved", {"loop": state["meta"]["loop_count"]})
+
+            loop_ms = (time.time() - loop_t0) * 1000.0
+            log_event("INFO", "Loop complete", {"ms": loop_ms})
 
         except KeyboardInterrupt:
-            log_line("INFO: KeyboardInterrupt -> saving state and exiting")
+            log_event("INFO", "KeyboardInterrupt -> saving state and exiting")
             try:
                 save_state(state)
-                log_line("STATE: saved on exit")
+                log_event("STATE", "saved on exit")
             except Exception as e:
-                log_line(f"ERROR: failed saving on exit -> {repr(e)}")
+                log_event("ERROR", "failed saving on exit", {"err": repr(e)})
             break
         except Exception as e:
-            # never crash silently
-            log_line(f"ERROR: {repr(e)}")
+            log_event("ERROR", "Unhandled exception in loop", {"err": repr(e)})
 
         time.sleep(CHECK_SECONDS)
 
