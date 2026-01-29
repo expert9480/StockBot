@@ -1,22 +1,22 @@
-from __future__ import annotations
+# -- 3rd Party Imports --
 
+from __future__ import annotations
 import os
 import time
 import pickle
 import datetime as dt
+import signal
+import sys
 from dataclasses import dataclass
 from typing import Optional, Dict, Any, List, Tuple
-
 from dotenv import load_dotenv
 import alpaca_trade_api as tradeapi
 import yfinance as yf
 
-# ----------------- USER MODULES -----------------
-# Your gmail.py should expose sendReport(body=..., subject_prefix=...)
-from gmail import sendReport  # keep your existing function
+# -- Internal Imports --
+from gmail import sendReport
 
-
-# ----------------- CONFIG -----------------
+# -- Configuration --
 load_dotenv()
 
 LOG_FILE = "index_vix_bot.log"
@@ -28,8 +28,8 @@ ENABLE_STARTUP_REPORT = True
 
 # Timing
 CHECK_SECONDS = 60  # 1 check per minute
-SAVE_EVERY_SECONDS = 15 * 60
-REPORT_EVERY_SECONDS_OPEN = 4 * 60 * 60  # every 4 hours while market open
+SAVE_EVERY_SECONDS = 15 * 60 # save state every 15 minutes
+REPORT_EVERY_SECONDS_OPEN = 4 * 60 * 60  # every 4 hours while market open send report
 
 # Strategy thresholds
 # Risk-off: sell when VIX spikes
@@ -37,6 +37,7 @@ VIX_SELL_LEVEL = 28.0
 
 # Normal regime: allowed to buy / (re)invest when VIX is calm
 VIX_BUY_LEVEL = 20.0
+VIX_BUY_MAX = 40.0
 
 # Optional confirmation before buying (3 consecutive upticks for EACH ETF)
 UPTREND_WINDOW = 3
@@ -437,225 +438,245 @@ def maybe_send_report(state: Dict[str, Any], prices: Dict[str, float]) -> None:
 def main() -> None:
     log_event("INFO", "BOT starting", {"watch_etfs": ",".join(WATCH_ETFS), "vix": VIX_SYMBOL})
     state = load_state()
+    shutdown = {"requested": False, "reason": None}
 
-    # Ensure trees exist
-    for sym in (WATCH_ETFS + [VIX_SYMBOL]):
-        state["trees"].setdefault(sym, PriceBST())
+    def _on_signal(signum: int, _frame: Any) -> None:
+        shutdown["requested"] = True
+        shutdown["reason"] = f"signal={signum}"
+        log_event("WARN", "Shutdown requested", {"signal": signum})
 
-    # Startup: record opens once per day
-    if not state["meta"].get("day_open_prices"):
-        log_event("INFO", "INIT: fetching day open prices")
-        try:
-            for sym in (WATCH_ETFS + [VIX_SYMBOL]):
-                state["meta"]["day_open_prices"][sym] = yf_day_open_price(sym)
-        except Exception as e:
-            log_event("ERROR", "INIT: failed to fetch open prices", {"err": repr(e)})
+    signal.signal(signal.SIGTERM, _on_signal)
+    signal.signal(signal.SIGINT, _on_signal)
 
-    # Startup report
-    if ENABLE_REPORTS and ENABLE_STARTUP_REPORT:
-        try:
-            prices = {sym: yf_last_price(sym) for sym in (WATCH_ETFS + [VIX_SYMBOL])}
-            body = "Bot initialized and running.\n\n" + format_report(state, prices)
-            sendReport(body=body, subject_prefix="Startup")
-            log_event("EMAIL", "startup report sent")
-        except Exception as e:
-            log_event("ERROR", "EMAIL startup failed", {"err": repr(e)})
+    try:
+        # Ensure trees exist
+        for sym in (WATCH_ETFS + [VIX_SYMBOL]):
+            state["trees"].setdefault(sym, PriceBST())
 
-    last_save: Optional[dt.datetime] = None
-    if state["meta"].get("last_save_time"):
-        try:
-            last_save = dt.datetime.fromisoformat(state["meta"]["last_save_time"])
-        except Exception:
-            last_save = None
+        # Startup: record opens once per day
+        if not state["meta"].get("day_open_prices"):
+            log_event("INFO", "INIT: fetching day open prices")
+            try:
+                for sym in (WATCH_ETFS + [VIX_SYMBOL]):
+                    state["meta"]["day_open_prices"][sym] = yf_day_open_price(sym)
+            except Exception as e:
+                log_event("ERROR", "INIT: failed to fetch open prices", {"err": repr(e)})
 
-    while True:
-        loop_t0 = time.time()
-        try:
-            state["meta"]["loop_count"] = int(state["meta"].get("loop_count", 0)) + 1
-            state["meta"]["last_check_time"] = now_utc().isoformat()
+        # Startup report
+        if ENABLE_REPORTS and ENABLE_STARTUP_REPORT:
+            try:
+                prices = {sym: yf_last_price(sym) for sym in (WATCH_ETFS + [VIX_SYMBOL])}
+                body = "Bot initialized and running.\n\n" + format_report(state, prices)
+                sendReport(body=body, subject_prefix="Startup")
+                log_event("EMAIL", "startup report sent")
+            except Exception as e:
+                log_event("ERROR", "EMAIL startup failed", {"err": repr(e)})
 
-            # day rollover safeguard
-            today = now_utc().date().isoformat()
-            if state.get("day") != today:
-                log_event("INFO", "DAY rollover -> resetting state", {"prev_day": state.get("day"), "today": today})
-                state = default_state()
+        last_save: Optional[dt.datetime] = None
+        if state["meta"].get("last_save_time"):
+            try:
+                last_save = dt.datetime.fromisoformat(state["meta"]["last_save_time"])
+            except Exception:
+                last_save = None
 
-            # Fetch prices
-            prices: Dict[str, float] = {}
-            data_errors: Dict[str, str] = {}
-            for sym in (WATCH_ETFS + [VIX_SYMBOL]):
+        while True:
+            if shutdown["requested"]:
+                log_event("INFO", "Exiting loop (shutdown)", {"reason": shutdown["reason"]})
+                break
+
+            loop_t0 = time.time()
+            try:
+                state["meta"]["loop_count"] = int(state["meta"].get("loop_count", 0)) + 1
+                state["meta"]["last_check_time"] = now_utc().isoformat()
+
+                # day rollover safeguard
+                today = now_utc().date().isoformat()
+                if state.get("day") != today:
+                    log_event("INFO", "DAY rollover -> resetting state", {"prev_day": state.get("day"), "today": today})
+                    state = default_state()
+
+                # Fetch prices
+                prices: Dict[str, float] = {}
+                data_errors: Dict[str, str] = {}
+                for sym in (WATCH_ETFS + [VIX_SYMBOL]):
+                    try:
+                        prices[sym] = yf_last_price(sym)
+                    except Exception as e:
+                        data_errors[sym] = repr(e)
+
+                if data_errors:
+                    log_event("WARN", "DATA: pricing incomplete -> skipping trading", {"errors": data_errors})
+                    maybe_send_report(state, prices)
+                    now = now_utc()
+                    if last_save is None or (now - last_save).total_seconds() >= SAVE_EVERY_SECONDS:
+                        save_state(state)
+                        last_save = now
+                        log_event("STATE", "saved (after data error)")
+                    time.sleep(CHECK_SECONDS)
+                    continue
+
+                # Insert into BSTs
+                ts = time.time()
+                for sym, p in prices.items():
+                    state["trees"][sym].insert(ts, p)
+
+                # Update uptick buffers
+                for sym in WATCH_ETFS:
+                    update_uptick_buffer(state, sym, prices[sym])
+
+                # Backfill open prices if missing
+                for sym in (WATCH_ETFS + [VIX_SYMBOL]):
+                    if sym not in state["meta"]["day_open_prices"]:
+                        try:
+                            state["meta"]["day_open_prices"][sym] = yf_day_open_price(sym)
+                        except Exception as e:
+                            log_event("WARN", "DATA: failed to backfill open price", {"symbol": sym, "err": repr(e)})
+
+                # Market status
                 try:
-                    prices[sym] = yf_last_price(sym)
+                    is_open = market_is_open()
                 except Exception as e:
-                    data_errors[sym] = repr(e)
+                    log_event("ERROR", "ALPACA: get_clock failed -> skipping trading", {"err": repr(e)})
+                    is_open = False
 
-            if data_errors:
-                log_event("WARN", "DATA: pricing incomplete -> skipping trading", {"errors": data_errors})
+                mode = state["meta"].get("mode", "INVESTED")
+                vix = float(prices[VIX_SYMBOL])
+                flat = is_flat(WATCH_ETFS)
+
+                log_event(
+                    "THINK",
+                    "Loop snapshot",
+                    {
+                        "loop": state["meta"]["loop_count"],
+                        "mode": mode,
+                        "market_open": is_open,
+                        "vix": vix,
+                        "buy_lvl": VIX_BUY_LEVEL,
+                        "sell_lvl": VIX_SELL_LEVEL,
+                        "flat": flat,
+                    },
+                )
+
+                # Open orders gate (blocks BOTH buys and sells)
+                open_orders = list_open_orders_for(set(WATCH_ETFS))
+                if open_orders:
+                    summary = []
+                    for o in open_orders[:10]:
+                        summary.append(
+                            {
+                                "sym": getattr(o, "symbol", ""),
+                                "side": getattr(o, "side", ""),
+                                "type": getattr(o, "type", ""),
+                                "qty": getattr(o, "qty", ""),
+                                "notional": getattr(o, "notional", ""),
+                                "status": getattr(o, "status", ""),
+                                "id": getattr(o, "id", ""),
+                            }
+                        )
+                    log_event("THINK", "SKIP trading (open orders exist)", {"count": len(open_orders), "orders": summary})
+                else:
+                    # --- SELL RULE (risk-off) ---
+                    if mode == "INVESTED" and vix >= VIX_SELL_LEVEL:
+                        log_event("THINK", "Evaluate SELL", {"vix": vix, "threshold": VIX_SELL_LEVEL, "market_open": is_open})
+                        if is_open:
+                            log_event("TRIG", "SELL: VIX spike -> SELL ALL", {"vix": vix})
+                            any_sold = False
+                            for sym in WATCH_ETFS:
+                                any_sold = submit_sell_all(sym) or any_sold
+
+                            state["meta"]["sell_snapshot"] = {sym: prices[sym] for sym in WATCH_ETFS}
+                            state["meta"]["sell_time"] = now_utc().isoformat()
+                            state["meta"]["mode"] = "SOLD_OUT"
+
+                            log_event("INFO", "SELL complete -> SOLD_OUT", {"any_sold": any_sold})
+                        else:
+                            log_event("THINK", "SELL blocked (market closed)", {"vix": vix})
+
+                    # --- BUY RULE (normal regime) ---
+                    else:
+                        # buys are allowed when VIX is calm
+                        if not is_open:
+                            log_event("THINK", "No trading (market closed)")
+                        elif vix > VIX_BUY_LEVEL:
+                            log_event("THINK", "No buying (VIX above calm threshold)", {"vix": vix, "buy_lvl": VIX_BUY_LEVEL})
+                        elif not (vix < VIX_BUY_LEVEL or vix > VIX_BUY_MAX):
+                            log_event(
+                                "THINK",
+                                "No buying (VIX not in buy-eligible range)",
+                                {"vix": vix, "buy_low": VIX_BUY_LEVEL, "buy_high": VIX_BUY_MAX},
+                            )
+                        elif not buy_cooldown_ok(state):
+                            log_event("THINK", "No buying (cooldown)", {"cooldown_sec": BUY_COOLDOWN_SECONDS})
+                        else:
+                            # Only (re)invest if either:
+                            # - we are SOLD_OUT (risk-off), OR
+                            # - we are INVESTED but actually flat (no positions)
+                            should_invest = (mode == "SOLD_OUT") or (mode == "INVESTED" and flat)
+
+                            if not should_invest:
+                                log_event("THINK", "No action (already invested with positions)")
+                            else:
+                                uptick_ok = is_upticking_3(state)
+                                if REQUIRE_UPTICK_FOR_BUY and not uptick_ok:
+                                    log_event("THINK", "WAIT: calm regime but uptick not confirmed", {"uptick": uptick_debug(state)})
+                                else:
+                                    alloc = compute_per_symbol_buy_usd()
+                                    cash, bp = account_cash_and_bp()
+                                    log_event(
+                                        "TRIG",
+                                        "BUY: (re)investing in calm regime",
+                                        {
+                                            "mode": mode,
+                                            "flat": flat,
+                                            "vix": vix,
+                                            "cash": cash,
+                                            "buying_power": bp,
+                                            "spendable": round(spendable_usd(), 2),
+                                            "alloc": {k: round(v, 2) for k, v in alloc.items()},
+                                            "require_uptick": REQUIRE_UPTICK_FOR_BUY,
+                                            "uptick_ok": uptick_ok,
+                                        },
+                                    )
+
+                                    placed_any = False
+                                    for sym in WATCH_ETFS:
+                                        usd = float(alloc.get(sym, 0.0))
+                                        if usd >= MIN_BUY_USD:
+                                            placed_any = submit_buy_notional(sym, usd) or placed_any
+                                        else:
+                                            log_event("THINK", "BUY skipped (too small)", {"symbol": sym, "usd": usd, "min": MIN_BUY_USD})
+
+                                    mark_buy_time(state)
+                                    state["meta"]["mode"] = "INVESTED"
+                                    state["meta"]["sell_snapshot"] = {}
+                                    state["meta"]["sell_time"] = None
+                                    log_event("INFO", "BUY step complete -> INVESTED", {"placed_any": placed_any})
+
+                # Reporting
                 maybe_send_report(state, prices)
+
+                # Periodic save
                 now = now_utc()
                 if last_save is None or (now - last_save).total_seconds() >= SAVE_EVERY_SECONDS:
                     save_state(state)
                     last_save = now
-                    log_event("STATE", "saved (after data error)")
-                time.sleep(CHECK_SECONDS)
-                continue
+                    log_event("STATE", "saved", {"loop": state["meta"]["loop_count"]})
 
-            # Insert into BSTs
-            ts = time.time()
-            for sym, p in prices.items():
-                state["trees"][sym].insert(ts, p)
+                loop_ms = (time.time() - loop_t0) * 1000.0
+                log_event("INFO", "Loop complete", {"ms": loop_ms})
 
-            # Update uptick buffers
-            for sym in WATCH_ETFS:
-                update_uptick_buffer(state, sym, prices[sym])
-
-            # Backfill open prices if missing
-            for sym in (WATCH_ETFS + [VIX_SYMBOL]):
-                if sym not in state["meta"]["day_open_prices"]:
-                    try:
-                        state["meta"]["day_open_prices"][sym] = yf_day_open_price(sym)
-                    except Exception as e:
-                        log_event("WARN", "DATA: failed to backfill open price", {"symbol": sym, "err": repr(e)})
-
-            # Market status
-            try:
-                is_open = market_is_open()
+            except KeyboardInterrupt:
+                log_event("INFO", "KeyboardInterrupt -> saving state and exiting")
+                try:
+                    save_state(state)
+                    log_event("STATE", "saved on exit")
+                except Exception as e:
+                    log_event("ERROR", "failed saving on exit", {"err": repr(e)})
+                break
             except Exception as e:
-                log_event("ERROR", "ALPACA: get_clock failed -> skipping trading", {"err": repr(e)})
-                is_open = False
+                log_event("ERROR", "Unhandled exception in loop", {"err": repr(e)})
 
-            mode = state["meta"].get("mode", "INVESTED")
-            vix = float(prices[VIX_SYMBOL])
-            flat = is_flat(WATCH_ETFS)
-
-            log_event(
-                "THINK",
-                "Loop snapshot",
-                {
-                    "loop": state["meta"]["loop_count"],
-                    "mode": mode,
-                    "market_open": is_open,
-                    "vix": vix,
-                    "buy_lvl": VIX_BUY_LEVEL,
-                    "sell_lvl": VIX_SELL_LEVEL,
-                    "flat": flat,
-                },
-            )
-
-            # Open orders gate (blocks BOTH buys and sells)
-            open_orders = list_open_orders_for(set(WATCH_ETFS))
-            if open_orders:
-                summary = []
-                for o in open_orders[:10]:
-                    summary.append(
-                        {
-                            "sym": getattr(o, "symbol", ""),
-                            "side": getattr(o, "side", ""),
-                            "type": getattr(o, "type", ""),
-                            "qty": getattr(o, "qty", ""),
-                            "notional": getattr(o, "notional", ""),
-                            "status": getattr(o, "status", ""),
-                            "id": getattr(o, "id", ""),
-                        }
-                    )
-                log_event("THINK", "SKIP trading (open orders exist)", {"count": len(open_orders), "orders": summary})
-            else:
-                # --- SELL RULE (risk-off) ---
-                if mode == "INVESTED" and vix >= VIX_SELL_LEVEL:
-                    log_event("THINK", "Evaluate SELL", {"vix": vix, "threshold": VIX_SELL_LEVEL, "market_open": is_open})
-                    if is_open:
-                        log_event("TRIG", "SELL: VIX spike -> SELL ALL", {"vix": vix})
-                        any_sold = False
-                        for sym in WATCH_ETFS:
-                            any_sold = submit_sell_all(sym) or any_sold
-
-                        state["meta"]["sell_snapshot"] = {sym: prices[sym] for sym in WATCH_ETFS}
-                        state["meta"]["sell_time"] = now_utc().isoformat()
-                        state["meta"]["mode"] = "SOLD_OUT"
-
-                        log_event("INFO", "SELL complete -> SOLD_OUT", {"any_sold": any_sold})
-                    else:
-                        log_event("THINK", "SELL blocked (market closed)", {"vix": vix})
-
-                # --- BUY RULE (normal regime) ---
-                else:
-                    # buys are allowed when VIX is calm
-                    if not is_open:
-                        log_event("THINK", "No trading (market closed)")
-                    elif vix > VIX_BUY_LEVEL:
-                        log_event("THINK", "No buying (VIX above calm threshold)", {"vix": vix, "buy_lvl": VIX_BUY_LEVEL})
-                    elif not buy_cooldown_ok(state):
-                        log_event("THINK", "No buying (cooldown)", {"cooldown_sec": BUY_COOLDOWN_SECONDS})
-                    else:
-                        # Only (re)invest if either:
-                        # - we are SOLD_OUT (risk-off), OR
-                        # - we are INVESTED but actually flat (no positions)
-                        should_invest = (mode == "SOLD_OUT") or (mode == "INVESTED" and flat)
-
-                        if not should_invest:
-                            log_event("THINK", "No action (already invested with positions)")
-                        else:
-                            uptick_ok = is_upticking_3(state)
-                            if REQUIRE_UPTICK_FOR_BUY and not uptick_ok:
-                                log_event("THINK", "WAIT: calm regime but uptick not confirmed", {"uptick": uptick_debug(state)})
-                            else:
-                                alloc = compute_per_symbol_buy_usd()
-                                cash, bp = account_cash_and_bp()
-                                log_event(
-                                    "TRIG",
-                                    "BUY: (re)investing in calm regime",
-                                    {
-                                        "mode": mode,
-                                        "flat": flat,
-                                        "vix": vix,
-                                        "cash": cash,
-                                        "buying_power": bp,
-                                        "spendable": round(spendable_usd(), 2),
-                                        "alloc": {k: round(v, 2) for k, v in alloc.items()},
-                                        "require_uptick": REQUIRE_UPTICK_FOR_BUY,
-                                        "uptick_ok": uptick_ok,
-                                    },
-                                )
-
-                                placed_any = False
-                                for sym in WATCH_ETFS:
-                                    usd = float(alloc.get(sym, 0.0))
-                                    if usd >= MIN_BUY_USD:
-                                        placed_any = submit_buy_notional(sym, usd) or placed_any
-                                    else:
-                                        log_event("THINK", "BUY skipped (too small)", {"symbol": sym, "usd": usd, "min": MIN_BUY_USD})
-
-                                mark_buy_time(state)
-                                state["meta"]["mode"] = "INVESTED"
-                                state["meta"]["sell_snapshot"] = {}
-                                state["meta"]["sell_time"] = None
-                                log_event("INFO", "BUY step complete -> INVESTED", {"placed_any": placed_any})
-
-            # Reporting
-            maybe_send_report(state, prices)
-
-            # Periodic save
-            now = now_utc()
-            if last_save is None or (now - last_save).total_seconds() >= SAVE_EVERY_SECONDS:
-                save_state(state)
-                last_save = now
-                log_event("STATE", "saved", {"loop": state["meta"]["loop_count"]})
-
-            loop_ms = (time.time() - loop_t0) * 1000.0
-            log_event("INFO", "Loop complete", {"ms": loop_ms})
-
-        except KeyboardInterrupt:
-            log_event("INFO", "KeyboardInterrupt -> saving state and exiting")
-            try:
-                save_state(state)
-                log_event("STATE", "saved on exit")
-            except Exception as e:
-                log_event("ERROR", "failed saving on exit", {"err": repr(e)})
-            break
-        except Exception as e:
-            log_event("ERROR", "Unhandled exception in loop", {"err": repr(e)})
-
-        time.sleep(CHECK_SECONDS)
+            time.sleep(CHECK_SECONDS)
 
 
 if __name__ == "__main__":
