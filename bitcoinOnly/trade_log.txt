@@ -25585,3 +25585,401 @@
 [2026-01-28 04:17:24 UTC] ACTION: (green) No buy; already at/above 20% target or insufficient cash/min trade.
 [2026-01-28 04:18:25 UTC] PRICE=88734.55 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87912.71 green=135865.10 yellow=255746.07
 [2026-01-28 04:18:25 UTC] ACTION: (green) No buy; already at/above 20% target or insufficient cash/min trade.
+[2026-01-29 20:30:39 UTC] === BOT START ===
+[2026-01-29 20:30:39 UTC] STARTING_MONEY_USD=$100000.00 | SYMBOL=BTC/USD
+[2026-01-29 20:30:40 UTC] PRICE=83846.04 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.25 green=135978.75 yellow=255960.00
+[2026-01-29 20:30:40 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:31:40 UTC] PRICE=83801.55 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.28 green=135978.80 yellow=255960.09
+[2026-01-29 20:31:40 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:31:41 UTC] EMAIL: sent 12-hour report
+[2026-01-29 20:32:41 UTC] PRICE=83825.99 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.31 green=135978.84 yellow=255960.18
+[2026-01-29 20:32:41 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:33:41 UTC] PRICE=83822.85 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.34 green=135978.89 yellow=255960.27
+[2026-01-29 20:33:41 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:34:42 UTC] PRICE=83783.05 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.37 green=135978.94 yellow=255960.36
+[2026-01-29 20:34:42 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:35:42 UTC] PRICE=83809.06 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.40 green=135978.99 yellow=255960.44
+[2026-01-29 20:35:42 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:36:42 UTC] PRICE=83744.69 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.43 green=135979.03 yellow=255960.53
+[2026-01-29 20:36:42 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:37:42 UTC] PRICE=83724.70 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.46 green=135979.08 yellow=255960.62
+[2026-01-29 20:37:42 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:38:42 UTC] PRICE=83663.96 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.49 green=135979.13 yellow=255960.71
+[2026-01-29 20:38:42 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:39:42 UTC] PRICE=83758.03 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.53 green=135979.18 yellow=255960.80
+[2026-01-29 20:39:42 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:40:43 UTC] PRICE=83751.39 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.56 green=135979.22 yellow=255960.89
+[2026-01-29 20:40:43 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:41:43 UTC] PRICE=83757.30 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.59 green=135979.27 yellow=255960.98
+[2026-01-29 20:41:43 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:42:43 UTC] PRICE=83741.45 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.62 green=135979.32 yellow=255961.07
+[2026-01-29 20:42:43 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:43:43 UTC] PRICE=83870.26 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.65 green=135979.36 yellow=255961.16
+[2026-01-29 20:43:43 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:44:43 UTC] PRICE=83962.52 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.68 green=135979.41 yellow=255961.24
+[2026-01-29 20:44:43 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:45:44 UTC] PRICE=83921.09 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.71 green=135979.46 yellow=255961.33
+[2026-01-29 20:45:44 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:46:44 UTC] PRICE=83879.70 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.74 green=135979.51 yellow=255961.42
+[2026-01-29 20:46:44 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:47:44 UTC] PRICE=83984.71 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.77 green=135979.55 yellow=255961.51
+[2026-01-29 20:47:44 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:48:44 UTC] PRICE=84018.41 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.80 green=135979.60 yellow=255961.60
+[2026-01-29 20:48:44 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:49:44 UTC] PRICE=84019.60 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.83 green=135979.65 yellow=255961.69
+[2026-01-29 20:49:44 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:50:44 UTC] PRICE=83929.55 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.86 green=135979.70 yellow=255961.78
+[2026-01-29 20:50:44 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:51:45 UTC] PRICE=84137.97 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.89 green=135979.74 yellow=255961.87
+[2026-01-29 20:51:45 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:52:45 UTC] PRICE=84108.77 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.92 green=135979.79 yellow=255961.96
+[2026-01-29 20:52:45 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:53:45 UTC] PRICE=83937.70 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.95 green=135979.84 yellow=255962.05
+[2026-01-29 20:53:45 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:54:45 UTC] PRICE=83986.84 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87986.98 green=135979.88 yellow=255962.13
+[2026-01-29 20:54:45 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:55:45 UTC] PRICE=84038.44 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.01 green=135979.93 yellow=255962.22
+[2026-01-29 20:55:45 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:56:46 UTC] PRICE=84068.54 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.04 green=135979.98 yellow=255962.31
+[2026-01-29 20:56:46 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:57:46 UTC] PRICE=84033.57 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.08 green=135980.03 yellow=255962.40
+[2026-01-29 20:57:46 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:58:46 UTC] PRICE=83974.61 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.11 green=135980.07 yellow=255962.49
+[2026-01-29 20:58:46 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 20:59:46 UTC] PRICE=83907.26 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.14 green=135980.12 yellow=255962.58
+[2026-01-29 20:59:46 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:00:46 UTC] PRICE=84046.09 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.17 green=135980.17 yellow=255962.67
+[2026-01-29 21:00:46 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:01:46 UTC] PRICE=84098.10 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.20 green=135980.21 yellow=255962.76
+[2026-01-29 21:01:46 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:02:47 UTC] PRICE=84163.27 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.23 green=135980.26 yellow=255962.85
+[2026-01-29 21:02:47 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:03:47 UTC] PRICE=84150.96 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.26 green=135980.31 yellow=255962.94
+[2026-01-29 21:03:47 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:04:47 UTC] PRICE=84138.86 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.29 green=135980.36 yellow=255963.02
+[2026-01-29 21:04:47 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:05:47 UTC] PRICE=84162.82 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.32 green=135980.40 yellow=255963.11
+[2026-01-29 21:05:47 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:06:47 UTC] PRICE=84179.30 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.35 green=135980.45 yellow=255963.20
+[2026-01-29 21:06:47 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:07:47 UTC] PRICE=84137.36 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.38 green=135980.50 yellow=255963.29
+[2026-01-29 21:07:47 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:08:48 UTC] PRICE=84237.33 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.41 green=135980.55 yellow=255963.38
+[2026-01-29 21:08:48 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:09:48 UTC] PRICE=84251.52 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.44 green=135980.59 yellow=255963.47
+[2026-01-29 21:09:48 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:10:48 UTC] PRICE=84295.49 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.47 green=135980.64 yellow=255963.56
+[2026-01-29 21:10:48 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:11:48 UTC] PRICE=84284.02 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.50 green=135980.69 yellow=255963.65
+[2026-01-29 21:11:48 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:12:48 UTC] PRICE=84258.63 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.53 green=135980.73 yellow=255963.74
+[2026-01-29 21:12:48 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:13:48 UTC] PRICE=84280.58 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.56 green=135980.78 yellow=255963.83
+[2026-01-29 21:13:48 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:14:49 UTC] PRICE=84280.76 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.60 green=135980.83 yellow=255963.91
+[2026-01-29 21:14:49 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:15:49 UTC] PRICE=84264.86 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.63 green=135980.88 yellow=255964.00
+[2026-01-29 21:15:49 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:16:49 UTC] PRICE=84242.29 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.66 green=135980.92 yellow=255964.09
+[2026-01-29 21:16:49 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:17:49 UTC] PRICE=84184.87 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.69 green=135980.97 yellow=255964.18
+[2026-01-29 21:17:49 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:18:49 UTC] PRICE=84178.56 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.72 green=135981.02 yellow=255964.27
+[2026-01-29 21:18:49 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:19:49 UTC] PRICE=84196.97 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.75 green=135981.07 yellow=255964.36
+[2026-01-29 21:19:49 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:20:50 UTC] PRICE=84212.93 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.78 green=135981.11 yellow=255964.45
+[2026-01-29 21:20:50 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:21:50 UTC] PRICE=84217.20 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.81 green=135981.16 yellow=255964.54
+[2026-01-29 21:21:50 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:22:50 UTC] PRICE=84189.21 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.84 green=135981.21 yellow=255964.63
+[2026-01-29 21:22:50 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:23:50 UTC] PRICE=84159.07 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.87 green=135981.25 yellow=255964.71
+[2026-01-29 21:23:50 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:24:50 UTC] PRICE=84111.84 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.90 green=135981.30 yellow=255964.80
+[2026-01-29 21:24:50 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:25:50 UTC] PRICE=84100.60 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.93 green=135981.35 yellow=255964.89
+[2026-01-29 21:25:50 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:26:51 UTC] PRICE=84085.68 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.96 green=135981.40 yellow=255964.98
+[2026-01-29 21:26:51 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:27:51 UTC] PRICE=84159.93 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87987.99 green=135981.44 yellow=255965.07
+[2026-01-29 21:27:51 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:28:51 UTC] PRICE=84218.86 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.02 green=135981.49 yellow=255965.16
+[2026-01-29 21:28:51 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:29:51 UTC] PRICE=84213.42 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.05 green=135981.54 yellow=255965.25
+[2026-01-29 21:29:51 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:30:51 UTC] PRICE=84216.73 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.08 green=135981.59 yellow=255965.34
+[2026-01-29 21:30:51 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:31:52 UTC] PRICE=84271.42 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.12 green=135981.63 yellow=255965.43
+[2026-01-29 21:31:52 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:32:52 UTC] PRICE=84276.82 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.15 green=135981.68 yellow=255965.52
+[2026-01-29 21:32:52 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:33:52 UTC] PRICE=84281.30 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.18 green=135981.73 yellow=255965.60
+[2026-01-29 21:33:52 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:34:52 UTC] PRICE=84225.06 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.21 green=135981.77 yellow=255965.69
+[2026-01-29 21:34:52 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:35:52 UTC] PRICE=84216.85 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.24 green=135981.82 yellow=255965.78
+[2026-01-29 21:35:52 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:36:53 UTC] PRICE=84165.56 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.27 green=135981.87 yellow=255965.87
+[2026-01-29 21:36:53 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:37:53 UTC] PRICE=84259.27 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.30 green=135981.92 yellow=255965.96
+[2026-01-29 21:37:53 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:38:53 UTC] PRICE=84279.68 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.33 green=135981.96 yellow=255966.05
+[2026-01-29 21:38:53 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:39:53 UTC] PRICE=84328.70 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.36 green=135982.01 yellow=255966.14
+[2026-01-29 21:39:53 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:40:53 UTC] PRICE=84320.84 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.39 green=135982.06 yellow=255966.23
+[2026-01-29 21:40:53 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:41:53 UTC] PRICE=84323.04 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.42 green=135982.11 yellow=255966.32
+[2026-01-29 21:41:53 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:42:54 UTC] PRICE=84281.49 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.45 green=135982.15 yellow=255966.41
+[2026-01-29 21:42:54 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:43:54 UTC] PRICE=84288.52 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.48 green=135982.20 yellow=255966.49
+[2026-01-29 21:43:54 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:44:54 UTC] PRICE=84268.26 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.51 green=135982.25 yellow=255966.58
+[2026-01-29 21:44:54 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:45:54 UTC] PRICE=84311.48 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.54 green=135982.29 yellow=255966.67
+[2026-01-29 21:45:54 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:46:54 UTC] PRICE=84327.43 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.57 green=135982.34 yellow=255966.76
+[2026-01-29 21:46:54 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:47:54 UTC] PRICE=84337.90 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.60 green=135982.39 yellow=255966.85
+[2026-01-29 21:47:54 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:48:55 UTC] PRICE=84358.25 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.64 green=135982.44 yellow=255966.94
+[2026-01-29 21:48:55 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:49:55 UTC] PRICE=84420.32 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.67 green=135982.48 yellow=255967.03
+[2026-01-29 21:49:55 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:50:55 UTC] PRICE=84500.29 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.70 green=135982.53 yellow=255967.12
+[2026-01-29 21:50:55 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:51:55 UTC] PRICE=84353.52 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.73 green=135982.58 yellow=255967.21
+[2026-01-29 21:51:55 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:52:56 UTC] PRICE=84353.84 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.76 green=135982.63 yellow=255967.30
+[2026-01-29 21:52:56 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:53:56 UTC] PRICE=84425.99 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.79 green=135982.67 yellow=255967.38
+[2026-01-29 21:53:56 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:54:56 UTC] PRICE=84426.98 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.82 green=135982.72 yellow=255967.47
+[2026-01-29 21:54:56 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:55:56 UTC] PRICE=84432.45 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.85 green=135982.77 yellow=255967.56
+[2026-01-29 21:55:56 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:56:56 UTC] PRICE=84369.00 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.88 green=135982.81 yellow=255967.65
+[2026-01-29 21:56:56 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:57:56 UTC] PRICE=84365.26 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.91 green=135982.86 yellow=255967.74
+[2026-01-29 21:57:56 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:58:57 UTC] PRICE=84381.40 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.94 green=135982.91 yellow=255967.83
+[2026-01-29 21:58:57 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 21:59:57 UTC] PRICE=84360.70 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87988.97 green=135982.96 yellow=255967.92
+[2026-01-29 21:59:57 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:00:57 UTC] PRICE=84361.79 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.00 green=135983.00 yellow=255968.01
+[2026-01-29 22:00:57 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:01:57 UTC] PRICE=84375.87 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.03 green=135983.05 yellow=255968.10
+[2026-01-29 22:01:57 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:02:57 UTC] PRICE=84361.38 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.06 green=135983.10 yellow=255968.18
+[2026-01-29 22:02:57 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:03:57 UTC] PRICE=84362.46 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.09 green=135983.15 yellow=255968.27
+[2026-01-29 22:03:57 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:04:58 UTC] PRICE=84389.45 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.12 green=135983.19 yellow=255968.36
+[2026-01-29 22:04:58 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:05:58 UTC] PRICE=84464.15 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.16 green=135983.24 yellow=255968.45
+[2026-01-29 22:05:58 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:06:58 UTC] PRICE=84470.99 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.19 green=135983.29 yellow=255968.54
+[2026-01-29 22:06:58 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:07:58 UTC] PRICE=84458.52 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.22 green=135983.33 yellow=255968.63
+[2026-01-29 22:07:58 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:08:58 UTC] PRICE=84467.54 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.25 green=135983.38 yellow=255968.72
+[2026-01-29 22:08:58 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:09:58 UTC] PRICE=84458.00 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.28 green=135983.43 yellow=255968.81
+[2026-01-29 22:09:58 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:10:59 UTC] PRICE=84431.19 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.31 green=135983.48 yellow=255968.90
+[2026-01-29 22:10:59 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:11:59 UTC] PRICE=84429.25 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.34 green=135983.52 yellow=255968.99
+[2026-01-29 22:11:59 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:12:59 UTC] PRICE=84394.43 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.37 green=135983.57 yellow=255969.07
+[2026-01-29 22:12:59 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:13:59 UTC] PRICE=84336.43 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.40 green=135983.62 yellow=255969.16
+[2026-01-29 22:13:59 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:14:59 UTC] PRICE=84200.12 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.43 green=135983.67 yellow=255969.25
+[2026-01-29 22:14:59 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:15:59 UTC] PRICE=84188.85 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.46 green=135983.71 yellow=255969.34
+[2026-01-29 22:15:59 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:17:00 UTC] PRICE=84254.43 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.49 green=135983.76 yellow=255969.43
+[2026-01-29 22:17:00 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:18:00 UTC] PRICE=84251.32 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.52 green=135983.81 yellow=255969.52
+[2026-01-29 22:18:00 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:19:00 UTC] PRICE=84261.02 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.55 green=135983.85 yellow=255969.61
+[2026-01-29 22:19:00 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:20:00 UTC] PRICE=84278.29 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.58 green=135983.90 yellow=255969.70
+[2026-01-29 22:20:00 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:21:00 UTC] PRICE=84283.20 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.61 green=135983.95 yellow=255969.79
+[2026-01-29 22:21:00 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:22:00 UTC] PRICE=84270.19 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.64 green=135984.00 yellow=255969.88
+[2026-01-29 22:22:00 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:23:01 UTC] PRICE=84300.57 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.68 green=135984.04 yellow=255969.96
+[2026-01-29 22:23:01 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:24:01 UTC] PRICE=84313.04 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.71 green=135984.09 yellow=255970.05
+[2026-01-29 22:24:01 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:25:01 UTC] PRICE=84296.45 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.74 green=135984.14 yellow=255970.14
+[2026-01-29 22:25:01 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:26:01 UTC] PRICE=84309.12 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.77 green=135984.19 yellow=255970.23
+[2026-01-29 22:26:01 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:27:01 UTC] PRICE=84282.88 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.80 green=135984.23 yellow=255970.32
+[2026-01-29 22:27:01 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:28:01 UTC] PRICE=84294.82 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.83 green=135984.28 yellow=255970.41
+[2026-01-29 22:28:01 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:29:02 UTC] PRICE=84296.26 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.86 green=135984.33 yellow=255970.50
+[2026-01-29 22:29:02 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:30:02 UTC] PRICE=84300.00 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.89 green=135984.37 yellow=255970.59
+[2026-01-29 22:30:02 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:31:02 UTC] PRICE=84334.10 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.92 green=135984.42 yellow=255970.68
+[2026-01-29 22:31:02 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:32:02 UTC] PRICE=84323.01 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.95 green=135984.47 yellow=255970.76
+[2026-01-29 22:32:02 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:33:03 UTC] PRICE=84336.04 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87989.98 green=135984.52 yellow=255970.85
+[2026-01-29 22:33:03 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:34:03 UTC] PRICE=84271.50 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.01 green=135984.56 yellow=255970.94
+[2026-01-29 22:34:03 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:35:03 UTC] PRICE=84256.11 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.04 green=135984.61 yellow=255971.03
+[2026-01-29 22:35:03 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:36:03 UTC] PRICE=84271.31 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.07 green=135984.66 yellow=255971.12
+[2026-01-29 22:36:03 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:37:03 UTC] PRICE=84280.41 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.10 green=135984.71 yellow=255971.21
+[2026-01-29 22:37:03 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:38:03 UTC] PRICE=84242.63 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.13 green=135984.75 yellow=255971.30
+[2026-01-29 22:38:03 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:39:04 UTC] PRICE=84237.41 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.16 green=135984.80 yellow=255971.39
+[2026-01-29 22:39:04 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:40:04 UTC] PRICE=84248.09 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.20 green=135984.85 yellow=255971.48
+[2026-01-29 22:40:04 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:41:04 UTC] PRICE=84254.75 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.23 green=135984.89 yellow=255971.57
+[2026-01-29 22:41:04 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:42:04 UTC] PRICE=84251.35 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.26 green=135984.94 yellow=255971.65
+[2026-01-29 22:42:04 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:43:04 UTC] PRICE=84243.03 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.29 green=135984.99 yellow=255971.74
+[2026-01-29 22:43:04 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:44:04 UTC] PRICE=84250.66 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.32 green=135985.04 yellow=255971.83
+[2026-01-29 22:44:04 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:45:05 UTC] PRICE=84315.00 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.35 green=135985.08 yellow=255971.92
+[2026-01-29 22:45:05 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:46:05 UTC] PRICE=84276.79 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.38 green=135985.13 yellow=255972.01
+[2026-01-29 22:46:05 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:47:05 UTC] PRICE=84259.55 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.41 green=135985.18 yellow=255972.10
+[2026-01-29 22:47:05 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:48:05 UTC] PRICE=84278.08 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.44 green=135985.23 yellow=255972.19
+[2026-01-29 22:48:05 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:49:05 UTC] SKIP: already processed bar @ 2026-01-29T22:47:00+00:00
+[2026-01-29 22:50:05 UTC] PRICE=84304.86 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.50 green=135985.32 yellow=255972.37
+[2026-01-29 22:50:05 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:51:06 UTC] PRICE=84330.62 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.53 green=135985.37 yellow=255972.46
+[2026-01-29 22:51:06 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:52:06 UTC] PRICE=84357.09 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.56 green=135985.41 yellow=255972.54
+[2026-01-29 22:52:06 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:53:06 UTC] PRICE=84340.50 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.59 green=135985.46 yellow=255972.63
+[2026-01-29 22:53:06 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:54:06 UTC] PRICE=84374.68 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.62 green=135985.51 yellow=255972.72
+[2026-01-29 22:54:06 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:55:06 UTC] PRICE=84413.98 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.65 green=135985.56 yellow=255972.81
+[2026-01-29 22:55:06 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:56:06 UTC] PRICE=84419.05 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.68 green=135985.60 yellow=255972.90
+[2026-01-29 22:56:06 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:57:07 UTC] PRICE=84416.69 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.72 green=135985.65 yellow=255972.99
+[2026-01-29 22:57:07 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 22:58:07 UTC] SKIP: already processed bar @ 2026-01-29T22:56:00+00:00
+[2026-01-29 22:59:07 UTC] PRICE=84406.79 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.78 green=135985.74 yellow=255973.17
+[2026-01-29 22:59:07 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:00:07 UTC] PRICE=84421.94 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.81 green=135985.79 yellow=255973.26
+[2026-01-29 23:00:07 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:01:07 UTC] PRICE=84351.69 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.84 green=135985.84 yellow=255973.35
+[2026-01-29 23:01:07 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:02:08 UTC] PRICE=84394.84 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.87 green=135985.89 yellow=255973.43
+[2026-01-29 23:02:08 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:03:08 UTC] PRICE=84399.60 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.90 green=135985.93 yellow=255973.52
+[2026-01-29 23:03:08 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:04:08 UTC] PRICE=84372.71 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.93 green=135985.98 yellow=255973.61
+[2026-01-29 23:04:08 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:05:08 UTC] PRICE=84323.66 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.96 green=135986.03 yellow=255973.70
+[2026-01-29 23:05:08 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:06:08 UTC] PRICE=84322.40 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87990.99 green=135986.08 yellow=255973.79
+[2026-01-29 23:06:08 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:07:08 UTC] PRICE=84373.11 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.02 green=135986.12 yellow=255973.88
+[2026-01-29 23:07:08 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:08:09 UTC] PRICE=84340.48 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.05 green=135986.17 yellow=255973.97
+[2026-01-29 23:08:09 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:09:09 UTC] PRICE=84334.98 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.08 green=135986.22 yellow=255974.06
+[2026-01-29 23:09:09 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:10:09 UTC] PRICE=84329.81 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.11 green=135986.27 yellow=255974.15
+[2026-01-29 23:10:09 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:11:09 UTC] PRICE=84296.95 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.14 green=135986.31 yellow=255974.24
+[2026-01-29 23:11:09 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:12:09 UTC] PRICE=84323.90 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.17 green=135986.36 yellow=255974.32
+[2026-01-29 23:12:09 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:13:10 UTC] PRICE=84319.50 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.20 green=135986.41 yellow=255974.41
+[2026-01-29 23:13:10 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:14:10 UTC] PRICE=84367.53 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.24 green=135986.45 yellow=255974.50
+[2026-01-29 23:14:10 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:15:10 UTC] PRICE=84331.12 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.27 green=135986.50 yellow=255974.59
+[2026-01-29 23:15:10 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:16:10 UTC] PRICE=84364.06 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.30 green=135986.55 yellow=255974.68
+[2026-01-29 23:16:10 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:17:10 UTC] PRICE=84376.05 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.33 green=135986.60 yellow=255974.77
+[2026-01-29 23:17:10 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:18:11 UTC] PRICE=84403.41 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.36 green=135986.64 yellow=255974.86
+[2026-01-29 23:18:11 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:19:11 UTC] PRICE=84402.96 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.39 green=135986.69 yellow=255974.95
+[2026-01-29 23:19:11 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:20:11 UTC] PRICE=84388.15 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.42 green=135986.74 yellow=255975.04
+[2026-01-29 23:20:11 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:21:11 UTC] PRICE=84394.10 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.45 green=135986.79 yellow=255975.12
+[2026-01-29 23:21:11 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:22:11 UTC] PRICE=84401.90 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.48 green=135986.83 yellow=255975.21
+[2026-01-29 23:22:11 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:23:11 UTC] PRICE=84394.58 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.51 green=135986.88 yellow=255975.30
+[2026-01-29 23:23:11 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:24:12 UTC] PRICE=84388.45 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.54 green=135986.93 yellow=255975.39
+[2026-01-29 23:24:12 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:25:12 UTC] PRICE=84447.60 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.57 green=135986.97 yellow=255975.48
+[2026-01-29 23:25:12 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:26:12 UTC] PRICE=84499.18 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.60 green=135987.02 yellow=255975.57
+[2026-01-29 23:26:12 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:27:12 UTC] PRICE=84509.37 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.63 green=135987.07 yellow=255975.66
+[2026-01-29 23:27:12 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:28:12 UTC] PRICE=84532.27 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.66 green=135987.12 yellow=255975.75
+[2026-01-29 23:28:12 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:29:12 UTC] PRICE=84519.54 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.69 green=135987.16 yellow=255975.84
+[2026-01-29 23:29:12 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:30:13 UTC] PRICE=84427.19 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.72 green=135987.21 yellow=255975.93
+[2026-01-29 23:30:13 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:31:13 UTC] PRICE=84516.13 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.75 green=135987.26 yellow=255976.01
+[2026-01-29 23:31:13 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:32:13 UTC] PRICE=84486.31 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.79 green=135987.30 yellow=255976.10
+[2026-01-29 23:32:13 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:33:13 UTC] PRICE=84510.31 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.82 green=135987.35 yellow=255976.19
+[2026-01-29 23:33:13 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:34:13 UTC] PRICE=84551.00 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.85 green=135987.40 yellow=255976.28
+[2026-01-29 23:34:13 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:35:14 UTC] PRICE=84551.34 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.88 green=135987.45 yellow=255976.37
+[2026-01-29 23:35:14 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:36:14 UTC] PRICE=84555.98 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.91 green=135987.49 yellow=255976.46
+[2026-01-29 23:36:14 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:37:14 UTC] PRICE=84593.23 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.94 green=135987.54 yellow=255976.55
+[2026-01-29 23:37:14 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-01-29 23:38:14 UTC] PRICE=84567.66 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=87991.97 green=135987.59 yellow=255976.64
+[2026-01-29 23:38:14 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-02-03 05:11:44 UTC] === BOT START ===
+[2026-02-03 05:11:44 UTC] STARTING_MONEY_USD=$100000.00 | SYMBOL=BTC/USD
+[2026-02-03 05:11:46 UTC] PRICE=78647.99 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=88177.92 green=136274.97 yellow=256517.60
+[2026-02-03 05:11:46 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-02-03 05:12:46 UTC] PRICE=78617.80 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=88177.96 green=136275.02 yellow=256517.69
+[2026-02-03 05:12:46 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-02-03 05:12:49 UTC] EMAIL: sent 12-hour report
+[2026-02-03 05:13:49 UTC] PRICE=78475.09 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=88177.99 green=136275.07 yellow=256517.78
+[2026-02-03 05:13:49 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-02-03 05:14:49 UTC] PRICE=78453.97 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=88178.02 green=136275.12 yellow=256517.87
+[2026-02-03 05:14:49 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-02-03 05:15:49 UTC] PRICE=78443.05 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=88178.05 green=136275.17 yellow=256517.96
+[2026-02-03 05:15:49 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-02-03 05:16:49 UTC] PRICE=78406.63 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=88178.08 green=136275.21 yellow=256518.05
+[2026-02-03 05:16:49 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-02-03 05:17:49 UTC] PRICE=78437.54 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=88178.11 green=136275.26 yellow=256518.14
+[2026-02-03 05:17:49 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-02-03 05:18:50 UTC] PRICE=78368.04 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=88178.14 green=136275.31 yellow=256518.23
+[2026-02-03 05:18:50 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
+[2026-02-03 05:19:50 UTC] PRICE=78346.98 | BTC_QTY=0.00000000 BTC_VALUE=$0.00 CASH=$0.55 | LEVELS blue=88178.17 green=136275.36 yellow=256518.32
+[2026-02-03 05:19:50 UTC] ACTION: (blue) No buy; either already allocated or insufficient cash/min trade.
