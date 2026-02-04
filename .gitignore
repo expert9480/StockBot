@@ -194,3 +194,4 @@ bitcoinOnly/trade_log.txt
 correlationBreakdown/corr_breakdown_state.pkl
 regimeSwitchVolatilityBand/vol_band_state.pkl
 bitcoinOnly/state.json
+bitcoinDayTrade/state.json
