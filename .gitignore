@@ -188,10 +188,8 @@ oilFutures(dead)/trades.csv
 indexes/index_vix_state.pkl
 bitcoinDayTrade2/notes.txt
 bitcoinDayTrade2/bitcoin_daytrade_v2_state.pkl
-bitcoinDayTrade/state.json
 bitcoinDayTrade2(dead)/notes.txt
-bitcoinOnly/trade_log.txt
 correlationBreakdown/corr_breakdown_state.pkl
 regimeSwitchVolatilityBand/vol_band_state.pkl
-bitcoinOnly/state.json
-bitcoinDayTrade/state.json
+supplyChainDependency/supply_chain_state.pkl
+
